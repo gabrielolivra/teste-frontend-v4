@@ -3,6 +3,7 @@ import { MapContainer, Marker, Popup, TileLayer, Polyline } from "react-leaflet"
 import equipamentPositionHistory from "../../data/equipamentPositionHistory.json";
 import EquipamentModel from "../../data/equipamentModel.json";
 import { IEquipaments } from "../types/equipaments";
+import dataEquipaments from "../../data/equipament.json";
 
 interface Position {
   lat: number;
@@ -41,7 +42,6 @@ export default function MapComponent(equipament: IEquipaments) {
           return acc;
         }, {} as Record<string, Position>)
       );
-      console.log(groupedData)
       setData(groupedData.map((position) => ({ lat: position.lat, lon: position.lon, date: position.date })));
 
       if (groupedData.length > 0) {
@@ -59,6 +59,8 @@ export default function MapComponent(equipament: IEquipaments) {
     ? EquipamentModel.find((equipamentModel) => equipamentModel.id == equipament.equipmentModelId)
     : null;
 
+    console.log(descriptionEquipament)
+
   // Extrair as coordenadas para o trajeto
   const routeCoordinates = data.map((position) => [position.lat, position.lon]);
   return (
@@ -75,7 +77,7 @@ export default function MapComponent(equipament: IEquipaments) {
             <Popup>
               {descriptionEquipament
                 ? descriptionEquipament.name
-                : `Equipamento ${index + 1}`} <br />
+                : `Equipamento ${dataEquipaments[(index == 0 ? index +1 : index) + 1]?.name}`} <br />
 
               {latestDate && equipament && <strong>Última atualização: {latestDate}</strong>}
             </Popup>
