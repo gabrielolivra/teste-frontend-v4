@@ -7,12 +7,13 @@ import { IEquipaments } from "../types/equipaments";
 interface Position {
   lat: number;
   lon: number;
-  date: string; 
+  date: string;
 }
 
 export default function MapComponent(equipament: IEquipaments) {
   const [data, setData] = useState<Position[]>([]);
   const [latestDate, setLatestDate] = useState<string | null>(null);
+  console.log(equipament)
 
   useEffect(() => {
     let latestDateFound: string | null = null;

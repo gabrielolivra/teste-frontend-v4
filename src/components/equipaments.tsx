@@ -28,6 +28,7 @@ export default function Equipaments() {
         />
         <Button label="Mais recentes" onClick={handlerClearData} className="-mb-10"/>
       </div>
+      {equipaments.id && (<p className="text-center">Localizações do equipamento {equipaments.name}</p>)}
       <div className='flex justify-center items-center gap-2 mt-10'>
         <div className="w-[260px] h-[400px] overflow-y-auto border border-gray-300 rounded-lg p-2">
           <ul>
