@@ -1,5 +1,5 @@
 import 'leaflet/dist/leaflet.css';
-import Equipaments from './components/Equipaments';
+import Equipaments from './components/equipaments';
 
 export default function App(){
   return(
