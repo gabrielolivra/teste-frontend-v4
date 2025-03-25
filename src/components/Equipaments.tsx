@@ -5,7 +5,7 @@ import MapComponent from "./mapComponent";
 
 
 export default function Equipaments() {
-    const [equipaments, setEquipaments] = useState<IEquipaments | null>(null);
+    const [equipaments, setEquipaments] = useState<IEquipaments>({} as IEquipaments);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const filteredEquipaments = positions.filter((equipament: IEquipaments) =>
         equipament.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -33,7 +33,7 @@ export default function Equipaments() {
                     ))}
                 </ul>
             </div>
-            <MapComponent equipament={equipaments ? equipaments : ''} />
+            <MapComponent {...equipaments} />
         </div>
     );
 }
