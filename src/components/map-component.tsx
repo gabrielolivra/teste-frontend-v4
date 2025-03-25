@@ -64,7 +64,7 @@ export default function MapComponent(equipament: IEquipaments) {
     <>
       <MapContainer
         center={[data[0].lat, data[0].lon]}
-        zoom={10}
+        zoom={11}
         scrollWheelZoom={true}
         style={{ height: "400px", width: "100%" }}
       >
@@ -75,7 +75,8 @@ export default function MapComponent(equipament: IEquipaments) {
               {descriptionEquipament
                 ? descriptionEquipament.name
                 : `Equipamento ${index + 1}`} <br />
-              {latestDate && <strong>Última atualização: {latestDate}</strong>}
+
+              {latestDate && equipament &&  <strong>Última atualização: {latestDate}</strong>}
             </Popup>
           </Marker>
         ))}
