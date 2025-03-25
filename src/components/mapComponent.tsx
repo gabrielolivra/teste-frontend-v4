@@ -22,7 +22,7 @@ export default function MapComponent(equipament: IEquipaments) {
         .filter((equipamentPosition) => equipamentPosition.equipmentId == equipament.id)
         .flatMap((equipamentPosition) => equipamentPosition.positions)
         .map((position) => ({ lat: position.lat, lon: position.lon, date: position.date }))
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Ordena por data mais recente
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
       setData(dataObject);
 
@@ -41,20 +41,17 @@ export default function MapComponent(equipament: IEquipaments) {
           return acc;
         }, {} as Record<string, Position>)
       );
-
       setData(groupedData.map((position) => ({ lat: position.lat, lon: position.lon, date: position.date })));
 
       if (groupedData.length > 0) {
         latestDateFound = groupedData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date;
       }
     }
-
     setLatestDate(latestDateFound);
-    console.log(latestDateFound, "Data mais recente encontrada");
   }, [equipament]);
 
   if (data.length === 0) {
-    return <div className="w-full flex items-center justify-center">Nenhum dado disponível</div>;
+    return <div className="w-full flex items-center justify-center"></div>;
   }
 
   const descriptionEquipament = equipament.id
