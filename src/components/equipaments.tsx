@@ -6,10 +6,10 @@ import Button from "./button";
 
 export default function Equipaments() {
   const [equipaments, setEquipaments] = useState<IEquipaments>({} as IEquipaments);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchEquipament, setSearchEquipament] = useState<string>('');
 
   const filteredEquipaments = positions.filter((equipament: IEquipaments) =>
-    equipament.name.toLowerCase().includes(searchTerm.toLowerCase())
+    equipament.name.toLowerCase().includes(searchEquipament.toLowerCase())
   );
 
   const handlerClearData = () => {
@@ -22,11 +22,11 @@ export default function Equipaments() {
         <input
           type="text"
           placeholder="Buscar..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchEquipament}
+          onChange={(e) => setSearchEquipament(e.target.value)}
           className="border border-black p-2 rounded w-[210px] -mb-10"
         />
-        <Button label="Mais recentes" onClick={handlerClearData} className="-mb-10"/>
+        <Button label="Mais recentes" onClick={handlerClearData} className="-mb-10" />
       </div>
       {equipaments.id && (<p className="text-center">Localizações do equipamento <span className="font-bold">{equipaments.name}</span></p>)}
       <div className='flex justify-center items-center gap-2 mt-10'>
@@ -43,9 +43,7 @@ export default function Equipaments() {
             ))}
           </ul>
         </div>
-
         <MapComponent {...equipaments} />
-
       </div>
     </>
   );

@@ -41,6 +41,7 @@ export default function MapComponent(equipament: IEquipaments) {
           return acc;
         }, {} as Record<string, Position>)
       );
+      console.log(groupedData)
       setData(groupedData.map((position) => ({ lat: position.lat, lon: position.lon, date: position.date })));
 
       if (groupedData.length > 0) {
@@ -76,7 +77,7 @@ export default function MapComponent(equipament: IEquipaments) {
                 ? descriptionEquipament.name
                 : `Equipamento ${index + 1}`} <br />
 
-              {latestDate && equipament &&  <strong>Última atualização: {latestDate}</strong>}
+              {latestDate && equipament && <strong>Última atualização: {latestDate}</strong>}
             </Popup>
           </Marker>
         ))}
