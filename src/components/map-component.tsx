@@ -61,7 +61,6 @@ export default function MapComponent(equipament: IEquipaments) {
 
     console.log(descriptionEquipament)
 
-  // Extrair as coordenadas para o trajeto
   const routeCoordinates = data.map((position) => [position.lat, position.lon]);
   return (
     <>
