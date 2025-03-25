@@ -12,14 +12,14 @@ export default function Equipaments() {
     );
 
     return (
-        <div className='flex justify-center items-center mt-10'>
+        <div className='flex justify-center items-center gap-2 mt-10'>
             <div className="w-[260px] h-[400px] overflow-y-auto border border-gray-300 rounded-lg p-2">
                 <input
                     type="text"
-                    placeholder="Search..."
+                    placeholder="Buscar..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-[180px] p-2 border border-gray-300 rounded fixed -mt-14"
+                    className="w-[210px] p-2 border border-gray-300 rounded fixed -mt-14"
                 />
                 <ul>
                     {filteredEquipaments.map((equipament: IEquipaments) => (

@@ -10,26 +10,22 @@ interface Position {
 
 export default function MapComponent(equipament: any) {
   const [data, setData] = useState<Position[]>([]);
-  console.log(equipament.equipament)
 
   useEffect(() => {
     const dataObject = equipamentPositionHistory
       .filter((equipamentPosition) => equipamentPosition.equipmentId == equipament.equipament.id)
       .flatMap((equipamentPosition) => equipamentPosition.positions)
       .map((position) => ({ lat: position.lat, lon: position.lon }));
-
     setData(dataObject);
-    console.log(dataObject);
   }, [equipament]);
 
   if (data.length === 0) {
-    return <div>Loading...</div>;
+    return <div className="w-full flex items-center justify-center">Selecione um objeto</div>;
 
   }
-  console.log(equipament)
 
-  const dt = EquipamentModel.find((equipamentModel) => equipamentModel.id == equipament.equipament.equipmentModelId);
-  if (!dt) {
+  const descriptionEquipament = EquipamentModel.find((equipamentModel) => equipamentModel.id == equipament.equipament.equipmentModelId);
+  if (!descriptionEquipament) {
     return <div>Equipamento não encontrado</div>;
   }
 
@@ -41,7 +37,7 @@ export default function MapComponent(equipament: any) {
       {data.map((position, index) => (
         <Marker key={index} position={[position.lat, position.lon]}>
           <Popup>
-           {dt.name}
+            {descriptionEquipament.name}
           </Popup>
         </Marker>
       ))}
