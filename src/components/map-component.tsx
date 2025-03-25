@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, Polyline } from "react-leaflet";
 import equipamentPositionHistory from "../../data/equipamentPositionHistory.json";
 import EquipamentModel from "../../data/equipamentModel.json";
 import { IEquipaments } from "../types/equipaments";
@@ -13,7 +13,6 @@ interface Position {
 export default function MapComponent(equipament: IEquipaments) {
   const [data, setData] = useState<Position[]>([]);
   const [latestDate, setLatestDate] = useState<string | null>(null);
-  console.log(equipament)
 
   useEffect(() => {
     let latestDateFound: string | null = null;
@@ -59,6 +58,8 @@ export default function MapComponent(equipament: IEquipaments) {
     ? EquipamentModel.find((equipamentModel) => equipamentModel.id == equipament.equipmentModelId)
     : null;
 
+  // Extrair as coordenadas para o trajeto
+  const routeCoordinates = data.map((position) => [position.lat, position.lon]);
   return (
     <>
       <MapContainer
@@ -78,6 +79,8 @@ export default function MapComponent(equipament: IEquipaments) {
             </Popup>
           </Marker>
         ))}
+
+        {equipament.id && <Polyline positions={routeCoordinates} />}
       </MapContainer>
     </>
   );
