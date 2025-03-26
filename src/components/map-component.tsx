@@ -59,7 +59,7 @@ export default function MapComponent(equipament: IEquipaments) {
     ? EquipamentModel.find((equipamentModel) => equipamentModel.id == equipament.equipmentModelId)
     : null;
 
-  const routeCoordinates = data.map((position) => [position.lat, position.lon]);
+  const routeCoordinates = data.map((position) => [position.lat, position.lon] as [number, number]);
   return (
     <>
       <MapContainer
@@ -70,12 +70,12 @@ export default function MapComponent(equipament: IEquipaments) {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {data.map((position, index) => {
+        
           const equipamentName = descriptionEquipament
             ? descriptionEquipament.name
-            : `Equipamento ${index + 1} - ${dataEquipaments[index]?.name}`;
-
-          // Escolha o ícone com base no nome do equipamento
-          const markerIcon = customIcons[equipamentName] || defaultIcon;
+            : `${dataEquipaments[index]?.name}`;
+            console.log(equipament, equipamentName)
+          const markerIcon = customIcons[equipament.name || equipamentName] || defaultIcon;
            console.log(equipamentName)
           return (
             <Marker key={index} position={[position.lat, position.lon]} icon={markerIcon}>
@@ -96,7 +96,7 @@ export default function MapComponent(equipament: IEquipaments) {
           );
         })}
 
-        {equipament.id && <Polyline positions={routeCoordinates} />}
+        {equipament.id && <Polyline positions={routeCoordinates as [number, number][]} />}
       </MapContainer>
     </>
   );

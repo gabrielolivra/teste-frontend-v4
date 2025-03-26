@@ -1,4 +1,3 @@
-import L from "leaflet";
 export interface IEquipaments {
   id: string,
   name: string,
