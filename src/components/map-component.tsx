@@ -4,7 +4,7 @@ import equipamentPositionHistory from "../../data/equipamentPositionHistory.json
 import EquipamentModel from "../../data/equipamentModel.json";
 import { IEquipaments } from "../types/equipaments";
 import dataEquipaments from "../../data/equipament.json";
-
+import { customIcons, defaultIcon } from "../../contracts/icons";
 interface Position {
   lat: number;
   lon: number;
@@ -59,8 +59,6 @@ export default function MapComponent(equipament: IEquipaments) {
     ? EquipamentModel.find((equipamentModel) => equipamentModel.id == equipament.equipmentModelId)
     : null;
 
-    console.log(descriptionEquipament)
-
   const routeCoordinates = data.map((position) => [position.lat, position.lon]);
   return (
     <>
@@ -71,17 +69,32 @@ export default function MapComponent(equipament: IEquipaments) {
         style={{ height: "400px", width: "100%" }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {data.map((position, index) => (
-          <Marker key={index} position={[position.lat, position.lon]}>
-            <Popup>
-              {descriptionEquipament
-                ? descriptionEquipament.name
-                : `Equipamento ${dataEquipaments[(index == 0 ? index +1 : index) + 1]?.name}`} <br />
+        {data.map((position, index) => {
+          const equipamentName = descriptionEquipament
+            ? descriptionEquipament.name
+            : `Equipamento ${index + 1} - ${dataEquipaments[index]?.name}`;
 
-              {latestDate && equipament && <strong>Última atualização: {latestDate}</strong>}
-            </Popup>
-          </Marker>
-        ))}
+          // Escolha o ícone com base no nome do equipamento
+          const markerIcon = customIcons[equipamentName] || defaultIcon;
+           console.log(equipamentName)
+          return (
+            <Marker key={index} position={[position.lat, position.lon]} icon={markerIcon}>
+              <Popup>
+                <div className="p-4 bg-white rounded text-gray-800">
+                  <h3 className="text-lg font-bold text-blue-600">{equipamentName}</h3>
+                  {latestDate && equipament && (
+                    <p className="text-sm text-gray-600 mt-2">
+                      <strong>Última atualização:</strong> {latestDate.replace("T01:00:00.000Z", "")}
+                    </p>
+                  )}
+                  <p className="text-sm text-gray-700 mt-2">
+                    <strong>Coordenadas:</strong> {position.lat.toFixed(5)}, {position.lon.toFixed(5)}
+                  </p>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
 
         {equipament.id && <Polyline positions={routeCoordinates} />}
       </MapContainer>
