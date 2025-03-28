@@ -5,13 +5,19 @@ import EquipamentModel from "../../data/equipamentModel.json";
 import { IEquipaments } from "../types/equipaments";
 import dataEquipaments from "../../data/equipament.json";
 import { customIcons, defaultIcon } from "../../contracts/icons";
+import { formatDate, ganhoEquipamento, percentualEquipament } from "../../helpers/functions"
+
 interface Position {
   lat: number;
   lon: number;
   date: string;
 }
 
-export default function MapComponent(equipament: IEquipaments) {
+interface MapComponentProps {
+  equipament: IEquipaments;
+}
+
+export default function MapComponent({ equipament }: MapComponentProps) {
   const [data, setData] = useState<Position[]>([]);
   const [latestDate, setLatestDate] = useState<string | null>(null);
 
@@ -59,45 +65,60 @@ export default function MapComponent(equipament: IEquipaments) {
     ? EquipamentModel.find((equipamentModel) => equipamentModel.id == equipament.equipmentModelId)
     : null;
 
-  const routeCoordinates = data.map((position) => [position.lat, position.lon] as [number, number]);
-  return (
-    <>
-      <MapContainer
-        center={[data[0].lat, data[0].lon]}
-        zoom={11}
-        scrollWheelZoom={true}
-        style={{ height: "400px", width: "100%" }}
-      >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {data.map((position, index) => {
-        
-          const equipamentName = descriptionEquipament
-            ? descriptionEquipament.name
-            : `${dataEquipaments[index]?.name}`;
-            console.log(equipament, equipamentName)
-          const markerIcon = customIcons[equipament.name || equipamentName] || defaultIcon;
-           console.log(equipamentName)
-          return (
-            <Marker key={index} position={[position.lat, position.lon]} icon={markerIcon}>
-              <Popup>
-                <div className="p-4 bg-white rounded text-gray-800">
-                  <h3 className="text-lg font-bold text-blue-600">{equipamentName}</h3>
-                  {latestDate && equipament && (
-                    <p className="text-sm text-gray-600 mt-2">
-                      <strong>Última atualização:</strong> {latestDate.replace("T01:00:00.000Z", "")}
-                    </p>
-                  )}
-                  <p className="text-sm text-gray-700 mt-2">
-                    <strong>Coordenadas:</strong> {position.lat.toFixed(5)}, {position.lon.toFixed(5)}
-                  </p>
-                </div>
-              </Popup>
-            </Marker>
-          );
-        })}
+  const hourlyEarningsIds = descriptionEquipament?.hourlyEarnings?.map((earning) => earning.value) || [];
 
-        {equipament.id && <Polyline positions={routeCoordinates as [number, number][]} />}
-      </MapContainer>
-    </>
+  const routeCoordinates = data.map((position) => [position.lat, position.lon] as [number, number]);
+
+  const mapStyle = {
+    height: "500px",
+    width: "100%",
+    zIndex: 0,
+  };
+
+  return (
+    <MapContainer
+      center={[data[0].lat, data[0].lon]}
+      zoom={10}
+      scrollWheelZoom={true}
+      style={mapStyle}
+    >
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {data.map((position, index) => {
+        const equipamentName = descriptionEquipament
+          ? descriptionEquipament.name
+          : `${dataEquipaments[index]?.name}`;
+        const markerIcon = customIcons[equipament.name || equipamentName] || defaultIcon;
+        return (
+          <Marker key={index} position={[position.lat, position.lon]} icon={markerIcon}>
+            <Popup>
+              <div className="p-4 bg-white rounded text-gray-800">
+                <h3 className="text-lg font-bold text-blue-600">{equipamentName}</h3>
+                {latestDate && equipament && (
+                  <p className="text-sm text-gray-600 mt-2">
+                    <strong>Última atualização:</strong> {formatDate(latestDate)}
+                  </p>
+                )}
+                {
+                  equipament.id && (<> <p>
+                   <strong className="text-sm text-gray-600 mt-2">Ganhos: </strong> {ganhoEquipamento(hourlyEarningsIds)}
+                  </p>
+                    <p>
+                     <strong className="text-sm text-gray-600 mt-2">Percentual: </strong>{percentualEquipament(hourlyEarningsIds).toFixed(2)}%
+                    </p>
+                  </>
+                  )
+                }
+                <p className="text-sm text-gray-700 mt-2">
+                  <strong>Coordenadas:</strong> {position.lat.toFixed(5)}, {position.lon.toFixed(5)}
+                </p>
+              </div>
+            </Popup>
+          </Marker>
+        );
+      })}
+      {equipament.id && <Polyline positions={routeCoordinates as [number, number][]} />}
+    </MapContainer>
   );
 }
+
+
